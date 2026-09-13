@@ -3,6 +3,7 @@
   stdenvNoCC,
   fetchurl,
   unzrip,
+  installFonts,
 }:
 
 stdenvNoCC.mkDerivation {
@@ -18,18 +19,12 @@ stdenvNoCC.mkDerivation {
     runHook preUnpack
 
     ${lib.getExe unzrip} -O SHIFT_JIS "$src"
+    rm 07Yasashisa/IPAfont00303/ipag.ttf
 
     runHook postUnpack
   '';
 
-  installPhase = ''
-    runHook preInstall
-
-    install -Dm444 "07Yasashisa/07やさしさゴシック.ttf" -t "$out/share/fonts/truetype"
-    install -Dm444 "07Yasashisa/その他-サポート外/OpenType/YasashisaGothic.otf" -t "$out/share/fonts/opentype"
-
-    runHook postInstall
-  '';
+  nativeBuildInputs = [ installFonts ];
 
   meta = {
     description = "Free gothic style font by Fontna";
